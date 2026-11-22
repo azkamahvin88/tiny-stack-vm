@@ -1,7 +1,11 @@
 import{readFileSync as r,readdirSync as d,mkdirSync as m,writeFileSync as w}from'node:fs'
 import{join as j}from'node:path'
 const I=process.env.MAKEFUN_INPUT_DIR??'/input',O=process.env.MAKEFUN_OUTPUT_DIR??'/output'
-// one char per opcode 0..0x53: 35+imm*16+pops*4+pushes, '~' = no opcode
+// Trap table T: one char per opcode 0..0x53.
+// Each char code c encodes 35 + imm*16 + pops*4 + pushes, where
+// imm = immediate bytes after the opcode, pops/pushes = stack delta.
+// '~' (code 126) means "no opcode": any char code >= 115 is rejected
+// before dispatch with error 5 (invalid opcode).
 const T="#4d')-.2~~~~~~~~,,,,,,,(,,,(,,,~,,,~~~~~~~~~~~~~CGGC#~~~~~~~~~~~(+~~~~~~~~~~~~~~''$'"
 for(const id of d(I).sort()){
 const p=r(j(I,id,'program.bin')),q=r(j(I,id,'input.bin')),n=p.length
